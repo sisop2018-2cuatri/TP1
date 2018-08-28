@@ -1,0 +1,31 @@
+Ejercicio 1:  En base al siguiente script de Powershell: 
+Param 
+(
+  [Parameter(Position = 1, Mandatory = $false)][String] $pathsalida = ".\procesos.txt ",   
+  [int] $cantidad = 3 
+) 
+$existe = Test-Path $pathsalida 
+if ($existe -eq $true)
+  {   
+    $listaproceso = Get-Process   
+    foreach ($proceso in $listaproceso)   
+    {     
+      $proceso | Format-List -Property Id,Name >> $pathsalida   
+    }     
+      for ($i = 0; $i -lt $cantidad ; $i++)   
+      {     
+        Write-Host $listaproceso[$i].Name - $listaproceso[$i].Id   
+      } 
+    } 
+    else 
+    {   
+      Write-Host "El path no existe" 
+    } 
+
+Responder: 1. ¿Cuál es el objetivo del script? 2. ¿Agregaría alguna otra validación a los parámetros? 
+3. ¿Qué sucede si se ejecuta el script sin ningún parámetro? 
+
+RESPUESTAS:
+1- El objetivo del script es guardar todos los nombres y id de los procesos activos al momento de su ejecucion en un archivo y mostrar por pantalla los primeros N procesos obtenidos y sus id.
+2- Podria validarse la cantidad ingresada de procesos a mostrar por pantalla, tendria que ser un numero entero positivo menoro igual a la cantidad de procesos activos.
+3- Si se ejecuta sin ningun parametro, se utiliza el string ".\procesos.txt " como ruta por defecto a guardar los resultados y 3 como cantidad por defecto a mostrar por pantalla.
