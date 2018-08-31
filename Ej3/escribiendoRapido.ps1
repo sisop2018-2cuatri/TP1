@@ -80,3 +80,17 @@ $tiempoPromedio =  [TimeSpan]::FromMilliseconds($stopwatch.Elapsed.TotalMillisec
 
 Write-Host("Tiempo Promedio por palabra: $tiempoPromedio");
 Write-Host("Teclas por segundo: "+ $teclas / $stopwatch.Elapsed.TotalSeconds);
+
+if($rutaScore){
+    [Hashtable]$score = @{};
+    Get-Content -Path $rutaScore | ForEach-Object{
+        $objeto = $_.ToString().Split("/").trim();
+        $score[$objeto[0]]=$objeto[1];
+    }
+    
+    $nombre = Read-Host -prompt "Ingrese su nombre";
+    $score[$nombre]=$tiempoPromedio;
+    write-host($score.GetEnumerator() | sort value);
+    $score.GetEnumerator() | sort value | select -First 3;
+    Add-Content $rutaScore "$nombre/$tiempoPromedio";
+}
