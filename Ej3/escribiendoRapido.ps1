@@ -69,7 +69,11 @@
     Numero de Ejercicio: 3
 
 .Integrantes:
-    38166442 Maximiliano Di Lorenzo
+    	.Avila, Leandro - 35.537.983
+		.Di Lorenzo, Maximiliano - 38.166.442
+		.Lorenz, Lautaro - 37.661.245
+		.Mercado, Maximiliano - 37.250.369
+		.Sequeira, Eliana - 39.061.003
 
 #>
 [CmdletBinding()]
