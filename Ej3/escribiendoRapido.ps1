@@ -30,7 +30,7 @@
         Palabra 'sarampion' / Tiempo: 00:00:02.3431641
         Tiempo Promedio por palabra: 00:00:01.9400000
         Teclas por segundo: 4.12461343993947
-        Ingrese su nombre: JIM
+        Ingrese su nombre con letras de la a-z y numeros 0-9: JIM
 
         Name                           Value                                                                                                                                                 
         ----                           -----                                                                                                                                                 
@@ -95,10 +95,11 @@ param (
 Write-Host("`nBienvenido a EscribiendoRapido!`n`n");
 Write-Host("Este juego toma el tiempo que tardas en escribir las palabras mostradas en pantalla.`n");
 
+
 if((Get-Content $rutaPalabras).Count -lt $cantidad){
     Write-Error -Message "CANTIDAD DE PALABRAS MAYOR A LAS EXISTENTES EN EL ARCHIVO." -ErrorAction Stop
 }else{
-$palabras = Get-Content -Path $rutaPalabras | select -First $cantidad;
+$palabras = Get-Content -Path $rutaPalabras | Sort-Object {Get-Random}| select -First $cantidad; #Agarro palabras mescladas del archivo y selecciono las primeras $cantidad. + variedad
 }
 
 switch($PSCmdlet.ParameterSetName){
@@ -145,8 +146,10 @@ if($rutaScore){
         $objeto = $_.ToString().Split("/").trim();
         $score[$objeto[0]]=$objeto[1];
     }
-    
-    $nombre = Read-Host -prompt "Ingrese su nombre";
+    do{
+    $nombre = Read-Host -prompt "Ingrese su nombre con letras de la a-z y numeros 0-9";
+    }while($nombre -notmatch "^[a-z0-9]*$");
+
     $score[$nombre]=$tiempoPromedio;
 
     $score.GetEnumerator() | sort value | select -First 3;
