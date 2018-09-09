@@ -95,10 +95,6 @@ Param(
 Set-Variable VERSION_CODE -option Constant -value '1.0.0'
 Write-Verbose "versión del script $VERSION_CODE" 
 
-# Administrador del sistema
-Set-Variable ADMINISTRADOR_EMAIL -option Constant -value 'lautaro.lorenz@gmail.com'
-Write-Verbose "email del administrador del sistema $ADMINISTRADOR_EMAIL" 
-
 # Buscar y abrir base de datos
 $path_bdd = '.\bdd.csv'
 
@@ -270,13 +266,13 @@ if(Test-Path $path_bdd) {
             Write-host "El destino modificado quedó guardado con los siguientes datos"
             $destino_modificado | Select-Object @{l='ID'; e={$ID}},* | Format-Table -Property $headers -Wrap -AutoSize
         } else {
-            Write-Host "ERROR: al guardar archivo '$path_bdd' no encontrado, puede enviar en email al administrador del sistema '$ADMINISTRADOR_EMAIL'" -ForegroundColor Red
+            Write-Host "ERROR: al guardar archivo '$path_bdd' no encontrado" -ForegroundColor Red
         }            
     } else { # si no hay destinos disponibles
         Write-Host "No se encontraron destinos, intente con otras ciudades"
     }
 } else { # si no se encontró la base de datos        
-    Write-Host "ERROR: archivo '$path_bdd' no encontrado, puede enviar en email al administrador del sistema '$ADMINISTRADOR_EMAIL'" -ForegroundColor Red
+    Write-Host "ERROR: archivo '$path_bdd' no encontrado" -ForegroundColor Red
 }
 
 <# Fin de archivo #>
