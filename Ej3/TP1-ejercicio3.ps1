@@ -4,7 +4,7 @@
 .DESCRIPTION
     El juego consiste en escribir la palabra mostrada en pantalla lo mas rapido posible. El tiempo que se tarde por cada palabra va a decidir el score final (tiempo promedio).
 .EXAMPLE
-    .\escribiendoRapido.ps1 3 palabras.txt score.txt -Aleatoria
+    .\TP1-ejercicio3.ps1 3 .\palabras\palabras.txt .\score\score.txt -Aleatoria
         Bienvenido a EscribiendoRapido!
 
 
@@ -38,7 +38,7 @@
         maxi                           00:00:01.5600000                                                                                                                                      
         max                            00:00:01.8870000
 .EXAMPLE
-    .\escribiendoRapido.ps1 2 palabras.txt -Descendente
+    .\TP1-ejercicio3.ps1 2 .\palabras\palabras.txt -Descendente
         Bienvenido a EscribiendoRapido!
 
 
@@ -64,7 +64,7 @@
         Teclas por segundo: 5.38095299762668
     
 .NOTES
-    Nombre del Script: escribiendoRapido.ps1
+    Nombre del Script: TP1-ejercicio3.ps1
     Trabajo Practico: 1
     Numero de Ejercicio: 3
 
@@ -83,7 +83,7 @@ param (
     [int]$cantidad,
     [Parameter(Mandatory=$false, Position=1)]
     [ValidateNotNullOrEmpty()]
-    [String]$rutaPalabras = ".\palabras.txt",
+    [String]$rutaPalabras = ".\palabras\palabras.txt",
     [Parameter(Mandatory=$false, Position=2)]
     [ValidateNotNullOrEmpty()]
     [String]$rutaScore,
@@ -96,17 +96,26 @@ param (
 
 )
 
-Write-Host("`nBienvenido a EscribiendoRapido!`n`n");
+Write-Host("`nBienvenido a TP1-ejercicio3!`n`n");
 Write-Host("Este juego toma el tiempo que tardas en escribir las palabras mostradas en pantalla.`n");
 
-#Evaluo si la cantidad de palabras en el archivo es menor a las pedidas por parametro
-if((Get-Content $rutaPalabras).Count -lt $cantidad){
-    Write-Error -Message "CANTIDAD DE PALABRAS MAYOR A LAS EXISTENTES EN EL ARCHIVO." -ErrorAction Stop
-}else{
-$palabras = Get-Content -Path $rutaPalabras | Sort-Object {Get-Random}| select -First $cantidad; #Agarro palabras mescladas del archivo y selecciono las primeras $cantidad. Da mas variedad de palabras
+#Recojo las palabras del archivo, las palabras vacias o null las filtro
+[System.Collections.ArrayList]$palabras = @()
+foreach($linea in Get-Content $rutaPalabras){
+    if(![String]::IsNullOrWhiteSpace($linea) -and $linea){
+        $palabras.Add($linea.trim()) > $null #Recorto excesos de espacios al inicio y fin de palabras para emprolijar
+    }
 }
 
-#Según lo que hayan elegido, determino como ordenar las palabras
+write-debug "Cantidad de palabras: $($palabras.Count)"
+if($palabras.Count -lt $cantidad){
+    Write-Error -Message "CANTIDAD DE PALABRAS MAYOR A LAS EXISTENTES EN EL ARCHIVO." -ErrorAction Stop #Evaluo si la cantidad de palabras en el archivo es menor a las pedidas por parametro
+}
+$palabras = $palabras | Sort {Get-Random} | select -First $cantidad
+
+
+
+#Segun lo que hayan elegido, determino como ordenar las palabras
 switch($PSCmdlet.ParameterSetName){
     'Aleatoria' {$palabras = $palabras | Sort-Object {Get-Random};}
     'Descendente' {$palabras = $palabras | Sort-Object -Descending;}
@@ -121,7 +130,7 @@ $tiempoPalabra = @{}; #Hashtable donde voy a guardar los tiempos de cada palabra
 Read-Host "Presiona Enter para comenzar" | Out-Null;
 
 #Inicio del juego
-Write-Host("`n------`nSTART!`n------`n");
+Write-Host "`n------`nSTART!`n------`n" -ForegroundColor Green -BackgroundColor Black
 
 #Recorro todas las palabras de la lista, tomando el tiempo que tardan en escribirlas
 foreach($palabra in $palabras){
@@ -136,29 +145,36 @@ foreach($palabra in $palabras){
     $tiempoTranscurrido = $stopwatch.Elapsed; 
 }
 
-Write-Host("`n----------`nFINISHED!`n----------`n");
-Write-Host("Tiempo total: " + $stopwatch.Elapsed);
+Write-Host "`n----------`nFINISHED!`n----------`n" -ForegroundColor White -BackgroundColor DarkGreen
 
 #Muestro las palabras y sus tiempos
 foreach($palabra in $palabras){
-    Write-Host("Palabra '$palabra' / Tiempo: " + $tiempoPalabra[$palabra]);
+    Write-Host "Palabra $($palabra) / Tiempo:  $($tiempoPalabra[$palabra])" -ForegroundColor Cyan -BackgroundColor DarkMagenta
 }
 
 $tiempoPromedio =  [TimeSpan]::FromMilliseconds($stopwatch.Elapsed.TotalMilliseconds/ $cantidad); #La unica forma que se me ocurrio de calcular el average time por palabra en juego, usando TimeSpan de .Net para poder crear un TimeSpan con milliseconds, cosa que el de PS no me deja
-
-Write-Host("Tiempo Promedio por palabra: $tiempoPromedio");
-Write-Host("Teclas por segundo: "+ $teclas / $stopwatch.Elapsed.TotalSeconds);
+Write-Host "Tiempo total: $($stopwatch.Elapsed)" -ForegroundColor Green -BackgroundColor Black
+Write-Host "Tiempo Promedio por palabra: $tiempoPromedio" -ForegroundColor Green -BackgroundColor Black
+Write-Host "Teclas por segundo: $($teclas / $stopwatch.Elapsed.TotalSeconds)" -ForegroundColor Green -BackgroundColor Black
+Write-Host ""
 
 #Si hay algun archivo de scores, guardo el score y muestro el top 3
 if($rutaScore){
     [Hashtable]$score = @{}; #Hashtable de scores donde voy a trabajar
+    
+    #Me fijo si existe el archivo de scores especificado, si no existe lo creo
+    if(!(Test-Path $rutaScore)){
+        New-Item $rutaScore -type file > $null
+    }
+    
     Get-Content -Path $rutaScore | ForEach-Object{
         $objeto = $_.ToString().Split("/").trim();
         $score[$objeto[0]]=$objeto[1]; #Guardo en el hashtable los scores del archivo
     }
+    
     do{
-    $nombre = Read-Host -prompt "Ingrese su nombre con letras de la a-z y numeros 0-9";
-    }while($nombre -notmatch "^[a-z0-9]*$"); #Para que no ingresen caracteres foraneos que revienten el split de arriba
+        $nombre = (Read-Host -prompt "Ingrese su nombre con letras de la a-z y numeros 0-9").Trim()
+    }while($nombre -notmatch "^[a-z0-9]"); #Para que no ingresen caracteres foraneos que revienten el split de arriba
 
     $score[$nombre]=$tiempoPromedio; #Agrego al hastable el score del jugador actual
 
