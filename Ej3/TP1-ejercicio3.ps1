@@ -83,7 +83,7 @@ param (
     [int]$cantidad,
     [Parameter(Mandatory=$false, Position=1)]
     [ValidateNotNullOrEmpty()]
-    [String]$rutaPalabras = ".\palabras\palabras.txt",
+    [String]$rutaPalabras = ".\palabras.txt",
     [Parameter(Mandatory=$false, Position=2)]
     [ValidateNotNullOrEmpty()]
     [String]$rutaScore,
