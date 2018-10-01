@@ -39,7 +39,7 @@
         max                            00:00:01.8870000
 .EXAMPLE
     .\TP1-ejercicio3.ps1 2 .\palabras\palabras.txt -Descendente
-        Bienvenido a EscribiendoRapido!
+        Bienvenido a TP1-ejercicio3!
 
 
         Este juego toma el tiempo que tardas en escribir las palabras mostradas en pantalla.
