@@ -4,7 +4,7 @@
 .DESCRIPTION
     El juego consiste en escribir la palabra mostrada en pantalla lo mas rapido posible. El tiempo que se tarde por cada palabra va a decidir el score final (tiempo promedio).
 .EXAMPLE
-    .\TP1-ejercicio3.ps1 3 .\palabras\palabras.txt .\score\score.txt -Aleatoria
+    .\TP1-ejercicio3.ps1 3 .\palabras.txt .\score\score.txt -Aleatoria
         Bienvenido a TP1-ejercicio3.ps1!
 
 
@@ -38,7 +38,7 @@
         maxi                           00:00:01.5600000                                                                                                                                      
         max                            00:00:01.8870000
 .EXAMPLE
-    .\TP1-ejercicio3.ps1 2 .\palabras\palabras.txt -Descendente
+    .\TP1-ejercicio3.ps1 2 .\palabras.txt -Descendente
         Bienvenido a TP1-ejercicio3!
 
 
