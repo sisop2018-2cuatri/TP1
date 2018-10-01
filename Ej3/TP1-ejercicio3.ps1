@@ -5,7 +5,7 @@
     El juego consiste en escribir la palabra mostrada en pantalla lo mas rapido posible. El tiempo que se tarde por cada palabra va a decidir el score final (tiempo promedio).
 .EXAMPLE
     .\TP1-ejercicio3.ps1 3 .\palabras\palabras.txt .\score\score.txt -Aleatoria
-        Bienvenido a EscribiendoRapido!
+        Bienvenido a TP1-ejercicio3.ps1!
 
 
         Este juego toma el tiempo que tardas en escribir las palabras mostradas en pantalla.
@@ -68,12 +68,12 @@
     Trabajo Practico: 1
     Numero de Ejercicio: 3
 
-.Integrantes:
-    	Avila, Leandro - 35.537.983
-		Di Lorenzo, Maximiliano - 38.166.442
-		Lorenz, Lautaro - 37.661.245
-		Mercado, Maximiliano - 37.250.369
-		Sequeira, Eliana - 39.061.003
+    Integrantes:
+    Avila, Leandro - 35.537.983
+	Di Lorenzo, Maximiliano - 38.166.442
+	Lorenz, Lautaro - 37.661.245
+	Mercado, Maximiliano - 37.250.369
+	Sequeira, Eliana - 39.061.003
 
 #>
 [CmdletBinding()]
@@ -98,6 +98,10 @@ param (
 
 Write-Host("`nBienvenido a TP1-ejercicio3!`n`n");
 Write-Host("Este juego toma el tiempo que tardas en escribir las palabras mostradas en pantalla.`n");
+
+if((Test-Path $rutaPalabras) -eq $false){
+    write-error -Message "PATH ERRONEO, NO SE ENCUENTRA UN ARCHIVO DE PALABRAS EN ESA DIRECCION" -ErrorAction Stop
+}
 
 #Recojo las palabras del archivo, las palabras vacias o null las filtro
 [System.Collections.ArrayList]$palabras = @()
